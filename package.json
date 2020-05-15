@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build && rm -rf docs && mv dist docs && cp CNAME docs/CNAME",
-    "distribute": "vue-cli-service serve --mode development"
+    "distribute": "vue-cli-service serve --mode development",
+    "update": "./scripts/update.sh"
   },
   "dependencies": {
     "@types/node": "^13.13.5",
