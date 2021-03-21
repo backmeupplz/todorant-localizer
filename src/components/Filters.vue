@@ -1,89 +1,67 @@
 <template lang="pug">
-  .mb-2.d-flex.flex-wrap.justify-center.white--text
-    v-chip.mx-1.my-1(
-      dark
-      v-for='tag in tags'
-      :key='tag'
-      :color='$store.state.tags.indexOf(tag) > -1 ? $store.state.colors[tag] : ""'
-      @click='toggleTag(tag)'
-    ) {{tag}}
-    v-chip.mx-1.my-1(
-      dark
-      v-for='language in languages'
-      :key='language'
-      :color='$store.state.languages.indexOf(language) > -1 ? $store.state.colors[language] : ""'
-      @click='toggleLanguage(language)'
-    ) {{language}}
-    v-chip.mx-1.my-1(
-      dark
-      v-for='nonlanguage in nonlanguages'
-      :key='`no-${nonlanguage}`'
-      :color='$store.state.nonlanguages.indexOf(nonlanguage) > -1 ? $store.state.colors[nonlanguage] : ""'
-      @click='toggleNonlanguage(nonlanguage)'
-    ) {{$t('no')}} {{nonlanguage}}
-    v-chip.mx-1.my-1(
-      dark
-      :color='$store.state.newFilterOn ? "primary" : ""'
-      @click='toggleNewFilterOn'
-    ) {{$t('new')}}
-    v-menu(offset-y)
-      template(v-slot:activator='{ on }')
-        v-btn.ml-2.mt-1(v-on='on' text icon)
-          v-icon keyboard_arrow_down
-      v-list
-        v-list-item(@click='makeAllViewed')
-          v-list-item-title Make all viewed
-        v-list-item(@click='makeAllNew')
-          v-list-item-title Make all new
+.mb-2.d-flex.flex-wrap.justify-center.white--text
+  v-chip.mx-1.my-1(
+    dark,
+    v-for='tag in tags',
+    :key='tag',
+    :color='selectedTags.includes(tag) ? colors[tag] : undefined',
+    @click='toggleTag(tag)'
+  ) {{ tag }}
+  v-chip.mx-1.my-1(
+    dark,
+    v-for='language in languages',
+    :key='language',
+    :color='selectedLanguages.includes(language) ? colors[language] : undefined',
+    @click='toggleLanguage(language)'
+  ) {{ language }}
+  v-chip.mx-1.my-1(
+    dark,
+    v-for='nonlanguage in languages',
+    :key='`no-${nonlanguage}`',
+    :color='selectedNonlanguages.includes(nonlanguage) ? colors[nonlanguage] : undefined',
+    @click='toggleNonlanguage(nonlanguage)'
+  ) {{ $t("no") }} {{ nonlanguage }}
+  v-chip.mx-1.my-1(
+    dark,
+    :color='newFilterEnabled ? "primary" : undefined',
+    @click='toggleNewFilterEnabled'
+  ) {{ $t("new") }}
+  v-menu(offset-y)
+    template(v-slot:activator='{ on }')
+      v-btn.ml-2.mt-1(v-on='on', text, icon)
+        v-icon keyboard_arrow_down
+    v-list
+      v-list-item(@click='markAllLocalizationsViewed')
+        v-list-item-title Make all viewed
+      v-list-item(@click='markAllLocalizationsNew')
+        v-list-item-title Make all new
 </template>
 
 <script lang="ts">
+import { ColorsMap } from '@/models/ColorsMap'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import * as store from '../plugins/store'
-import { Watch } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
 
-@Component({
-  props: {
-    languages: Array,
-    nonlanguages: Array,
-    tags: Array,
-    makeAllViewed: Function,
-  },
-})
+const DataStore = namespace('DataStore')
+
+@Component
 export default class Filters extends Vue {
-  toggleTag(tag: string) {
-    if (store.tags().indexOf(tag) > -1) {
-      store.setTags(store.tags().filter((t) => t !== tag))
-    } else {
-      store.setTags(store.tags().concat([tag]))
-    }
-  }
+  @DataStore.State colors!: ColorsMap
+  @DataStore.State tags!: string[]
+  @DataStore.State languages!: string[]
 
-  toggleLanguage(language: string) {
-    if (store.languages().indexOf(language) > -1) {
-      store.setLanguages(store.languages().filter((t) => t !== language))
-    } else {
-      store.setLanguages(store.languages().concat([language]))
-    }
-  }
+  @DataStore.State selectedTags!: string[]
+  @DataStore.State selectedLanguages!: string[]
+  @DataStore.State selectedNonlanguages!: string[]
 
-  toggleNonlanguage(nonlanguage: string) {
-    if (store.nonlanguages().indexOf(nonlanguage) > -1) {
-      store.setNonlanguages(
-        store.nonlanguages().filter((t) => t !== nonlanguage)
-      )
-    } else {
-      store.setNonlanguages(store.nonlanguages().concat([nonlanguage]))
-    }
-  }
+  @DataStore.State newFilterEnabled!: boolean
 
-  toggleNewFilterOn() {
-    store.setNewFilterOn(!store.newFilterOn())
-  }
-
-  makeAllNew() {
-    store.setViewedItems({})
-  }
+  @DataStore.Mutation toggleTag!: (tag: string) => void
+  @DataStore.Mutation toggleLanguage!: (language: string) => void
+  @DataStore.Mutation toggleNonlanguage!: (nonlanguage: string) => void
+  @DataStore.Mutation markAllLocalizationsNew!: () => void
+  @DataStore.Mutation markAllLocalizationsViewed!: () => void
+  @DataStore.Mutation toggleNewFilterEnabled!: () => void
 }
 </script>

@@ -1,30 +1,37 @@
 <template lang="pug">
-  v-app(:dark='$store.state.dark')
-    div(style='width: 100%' align='center')
-      div(style='maxWidth: 1000px;' align='left')
-        cookie-law(
-          theme='blood-orange'
-          :buttonText='$t("cookie.button")'
-          :message='$t("cookie.message")'
-        )
-        Navbar
-        Snackbar
-        v-content
-          router-view
+v-app
+  v-container
+    CookieMessage
+    Navbar
+    Snackbar
+    v-main
+      router-view
 </template>
 
 <script lang="ts">
-import Navbar from './components/Navbar.vue'
-import Snackbar from './components/Snackbar.vue'
-import * as store from './plugins/store'
-import CookieLaw from 'vue-cookie-law'
-import { i18n } from './plugins/i18n'
+import Vue from 'vue'
+import Navbar from '@/components/Navbar.vue'
+import Snackbar from '@/components/Snackbar.vue'
+import { i18n } from '@/plugins/i18n'
+import Component from 'vue-class-component'
+import { namespace } from 'vuex-class'
+import CookieMessage from '@/components/CookieMessage.vue'
 
-export default {
-  components: { Navbar, Snackbar, CookieLaw },
+const AppStore = namespace('AppStore')
+
+@Component({ components: { Navbar, Snackbar, CookieMessage } })
+export default class App extends Vue {
+  @AppStore.State dark!: boolean
+
   created() {
-    ;(this as any).$vuetify.theme.dark = store.dark()
+    ;(this as any).$vuetify.theme.dark = this.dark
     document.title = i18n.t('title') as string
-  },
+  }
 }
 </script>
+
+<style>
+.container {
+  max-width: 1000px !important;
+}
+</style>

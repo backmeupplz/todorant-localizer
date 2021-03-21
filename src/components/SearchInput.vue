@@ -1,23 +1,25 @@
 <template lang="pug">
-  v-text-field.my-0.py-0(
-    :label="$t('search')"
-    v-model='query'
-    append-icon='search'
-  )
+v-text-field(:label='$t("search")', v-model='queryProxy', append-icon='search')
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import * as store from '../plugins/store'
+import { namespace } from 'vuex-class'
+
+const DataStore = namespace('DataStore')
 
 @Component
 export default class SearchInput extends Vue {
-  get query() {
-    return store.query()
+  @DataStore.State query!: string
+
+  @DataStore.Mutation setQuery!: (query: string) => void
+
+  get queryProxy() {
+    return this.query
   }
-  set query(newQuery: string | undefined) {
-    store.setQuery(newQuery)
+  set queryProxy(newQuery: string) {
+    this.setQuery(newQuery)
   }
 }
 </script>

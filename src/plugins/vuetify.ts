@@ -1,8 +1,64 @@
 import Vue from 'vue'
-import Vuetify from 'vuetify'
+import Vuetify, {
+  VApp,
+  VAppBar,
+  VToolbarTitle,
+  VSpacer,
+  VBtn,
+  VIcon,
+  VMenu,
+  VList,
+  VListItem,
+  VListItemTitle,
+  VFlex,
+  VLayout,
+  VSnackbar,
+  VMain,
+  VTextField,
+  VChip,
+  VProgressLinear,
+  VPagination,
+  VCardText,
+  VCardTitle,
+  VCard,
+  VContainer,
+  VDivider,
+  VTextarea,
+  VSelect,
+  VCheckbox,
+} from 'vuetify/lib'
 import 'vuetify/dist/vuetify.min.css'
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  components: {
+    VApp,
+    VAppBar,
+    VToolbarTitle,
+    VSpacer,
+    VBtn,
+    VIcon,
+    VMenu,
+    VList,
+    VListItem,
+    VListItemTitle,
+    VFlex,
+    VLayout,
+    VSnackbar,
+    VMain,
+    VTextField,
+    VChip,
+    VProgressLinear,
+    VPagination,
+    VCardText,
+    VCardTitle,
+    VCard,
+    VContainer,
+    VDivider,
+    VTextarea,
+    VSelect,
+    VCheckbox,
+  },
+})
 
 export default new Vuetify({
   icons: {
