@@ -20,14 +20,15 @@ yarn serve
 yarn build
 ```
 
+
 ### Docker-compose example
 
 docker-compose.yml
-
 ```yaml
 version: '3'
 
 services:
+
   mongodb:
     image: mongo:latest
     container_name: localizer_mongo
@@ -49,7 +50,8 @@ services:
     image: alexstep/localizer-frontend
     container_name: localizer_frontend
     ports:
-      - '4242:80'
-```
+      - "4242:80"
 
+```
 Service available on localhost:4242
+
